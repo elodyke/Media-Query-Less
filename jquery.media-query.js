@@ -1,4 +1,45 @@
+less.env ='development';
+(function(a){
+    a.mediaquery=function(b){
+        b||(b=[]);
+        var d=d=a("head").append('<link rel="stylesheet/less" type="text/css" media="all" href="#">').children().last();
+        var actual = {
+            href: d.attr('href')
+        }
+        a(window).resize(function(){
+            var old = {
+                href: $("head link[type='text/css']:last").attr('href')
+            }
+            var e={
+                width:a("body").outerWidth(),
+                height:a("body").height()
+            };
+            a.each(b,function(f,c){
+                if (e.width+17>=c.minWidth && e.width+17<=c.maxWidth) {
+                    actual = c;
+                }
+            })
+            if (actual.href!=old.href) {
+                d.attr("href",actual.href);
+                if (less.env == 'development') {
+                    console.log('changing_stylesheet to ' + actual.href);
+                }
+                less.sheets.push($('link[href="'+actual.href+'"]')[0]);
+                less.refresh();
+                
+            }
+        });
+        a(window).resize()
+
+    }
+})(jQuery);
+
+
+
+
 /*
+
+Less Modification by elod@moldva.hu
 
 Media Query - jQuery Plugin
 
@@ -24,23 +65,3 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-
-(function($) {
-	$.mediaquery = function(options) {
-		if(!options) options = [];
-		var head = $('head');
-		var link = link = head.append('<link rel="stylesheet" rel="text/css" media="all" href="#">').children().last();
-		$(window).resize(function() {
-			var viewport = {
-				width: $('body').outerWidth(),
-				height: $('body').height()
-			};
-			$.each(options, function(index, value) {
-				if(viewport.width+17 >= value.minWidth && viewport.width+17 <= value.maxWidth) {
-					link.attr('href', value.href);
-				}
-			});
-		});
-		$(window).resize();
-	}
-})(jQuery);
